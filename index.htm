@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>WebGL Experiment - Sugaith</title>
+    <title>Sugaith - WebGL Experiment</title>
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
@@ -28,7 +28,7 @@
             window.innerWidth / window.innerHeight,
            1,  10000
         );
-        camera.position.z = 80;
+        camera.position.z = 60;
 
 
         //RENDERER
@@ -127,13 +127,15 @@
             gltf.scene.rotation.y = Math.PI + 5.2;
 
             escada = gltf.scene;
-            scene.add(gltf.scene);
-
-            escada.translateY(20)
             escada.name = "ESCADA";
+
+            scene.add(gltf.scene);
+            escada.translateY(20)
         });
 
 
+
+        //SMOKE
         let smokeTexture = THREE.ImageUtils.loadTexture('assets/Smoke-Element.png');
         let smokeMaterial = new THREE.MeshLambertMaterial({color: "#00dddd", map: smokeTexture, transparent: true});
         let smokeGeo = new THREE.PlaneGeometry(100,100);
@@ -141,13 +143,14 @@
 
         for (p = 0; p < 1; p++) {
             var particle = new THREE.Mesh(smokeGeo,smokeMaterial);
+            particle.name = "SMOKE";
             // particle.position.set(Math.random()*500-250,Math.random()*500-250,Math.random()*1000-100);
             particle.rotation.z = Math.random() * 360;
             particle.translateZ(-20);
-            particle.name = "SMOKE";
+            particle.scale.multiplyScalar(5);
+
             scene.add(particle);
             smokeParticles.push(particle);
-
         }
 
 
@@ -252,7 +255,7 @@
             if (escada)
                 escada.rotation.y += 0.01;
 
-            // evolveSmoke();
+            evolveSmoke();
 
             //FIX 4 PIXEL RATIO RESIZE SCREEN ISSUE
             const canvas = renderer.domElement;
