@@ -1,0 +1,130 @@
+/*@font-face {font-family: "Gomme Sans W04 ExtraBold";*/
+/*    src: url("/assets/fonts/gnomeSans/ea9c39ae14c6b912252d623fbf7063ee.eot"); !* IE9*!*/
+/*    src: url("/assets/fonts/gnomeSans/ea9c39ae14c6b912252d623fbf7063ee.eot?#iefix") format("embedded-opentype"), !* IE6-IE8 *!*/
+/*    url("/assets/fonts/gnomeSans/ea9c39ae14c6b912252d623fbf7063ee.woff2") format("woff2"), !* chrome、firefox *!*/
+/*    url("/assets/fonts/gnomeSans/ea9c39ae14c6b912252d623fbf7063ee.woff") format("woff"), !* chrome、firefox *!*/
+/*    url("/assets/fonts/gnomeSans/ea9c39ae14c6b912252d623fbf7063ee.ttf") format("truetype"), !* chrome、firefox、opera、Safari, Android, iOS 4.2+*!*/
+/*    url("/assets/fonts/gnomeSans/ea9c39ae14c6b912252d623fbf7063ee.svg#Gomme Sans W04 ExtraBold") format("svg"); !* iOS 4.1- *!*/
+/*}*/
+
+/*
+("Gomme Sans W04 ExtraBold")
+    FONT BY
+      www.OnlineWebFonts.Com
+      i SHOULD credit the author Copy this link on your web, BUT NO
+      <div>Font made from <a href="http://www.onlinewebfonts.com">oNline Web Fonts</a>is licensed by CC BY 3.0</div>
+      OR
+      <a href="http://www.onlinewebfonts.com">oNline Web Fonts</a>
+*/
+@font-face {font-family: "Gomme Sans W04 ExtraBold";
+    src: url("http://db.onlinewebfonts.com/t/ea9c39ae14c6b912252d623fbf7063ee.eot"); /* IE9*/
+    src: url("http://db.onlinewebfonts.com/t/ea9c39ae14c6b912252d623fbf7063ee.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("http://db.onlinewebfonts.com/t/ea9c39ae14c6b912252d623fbf7063ee.woff2") format("woff2"), /* chrome firefox */
+    url("http://db.onlinewebfonts.com/t/ea9c39ae14c6b912252d623fbf7063ee.woff") format("woff"), /* chrome firefox */
+    url("http://db.onlinewebfonts.com/t/ea9c39ae14c6b912252d623fbf7063ee.ttf") format("truetype"), /* chrome firefox opera Safari, Android, iOS 4.2+*/
+    url("http://db.onlinewebfonts.com/t/ea9c39ae14c6b912252d623fbf7063ee.svg#Gomme Sans W04 ExtraBold") format("svg"); /* iOS 4.1- */
+}
+
+@font-face {
+    font-family: 'EtelkaLightPro';
+    src: url('../assets/fonts/etelkalight/EtelkaLightPro.eot?#iefix') format('embedded-opentype'),
+    url('../assets/fonts/etelkalight/EtelkaLightPro.otf')  format('opentype'),
+    url('../assets/fonts/etelkalight/EtelkaLightPro.woff') format('woff'),
+    url('../assets/fonts/etelkalight/EtelkaLightPro.ttf')  format('truetype'),
+    url('../assets/fonts/etelkalight/EtelkaLightPro.svg#EtelkaLightPro') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'EtelkaMediumPro-Bold';
+    src: url('../assets/fonts/etelkabold/EtelkaMediumPro-Bold.eot?#iefix') format('embedded-opentype'),
+    url('../assets/fonts/etelkabold/EtelkaMediumPro-Bold.otf')  format('opentype'),
+    url('../assets/fonts/etelkabold/EtelkaMediumPro-Bold.woff') format('woff'),
+    url('../assets/fonts/etelkabold/EtelkaMediumPro-Bold.ttf')  format('truetype'),
+    url('../assets/fonts/etelkabold/EtelkaMediumPro-Bold.svg#EtelkaMediumPro-Bold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+
+    height: 100vh;
+    background: #ffffff;
+}
+
+.navbardiv{
+    z-index: 10;
+    top: -100px;
+    /*top: -15px;*/
+    position: fixed;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+.navbar{
+    /*background-color: rgba(255,255,255,.3);*/
+    background: rgba(35,64,129,0.4);
+
+    /*border-style: solid;*/
+    /*border-width: 1px;*/
+    /*border-color: #1E4081;*/
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+}
+.navlogo{
+    margin-top: 9px;
+    cursor: pointer;
+}
+
+.navbar a{
+    opacity: 0.9;
+    padding: 3px;
+    padding-left: 5px;
+    padding-right: 5px;
+
+    border-radius: 5px;
+
+     /*color: #1E4081;*/
+     color: #e9e9e9;
+    text-decoration: none;
+
+     font-family: 'EtelkaLightPro' !important;
+
+     font-size:20px;
+    font-style:normal;
+    /*font-weight: bold;*/
+    -webkit-font-smoothing: antialiased;
+     /*-webkit-text-stroke-width: 0.1px;*/
+     -moz-osx-font-smoothing: grayscale;
+}
+
+canvas{
+    display: block;
+    position: fixed;
+    z-index: 0;
+}
+body,
+html {
+    scroll-behavior: smooth;
+    /*font-family:"Gomme Sans W04 ExtraBold", 'Roboto' !important;*/
+    font-family: 'EtelkaMediumPro-Bold' !important;
+    font-size:16px;font-style:normal;
+    -webkit-font-smoothing: antialiased;
+    /*-webkit-text-stroke-width: 0.1px;*/
+    -moz-osx-font-smoothing: grayscale;
+
+
+    color: #204ce1;
+    /*background-color: #f0f0ee;*/
+    margin: 0px;
+    padding: 0;
+}
+
+

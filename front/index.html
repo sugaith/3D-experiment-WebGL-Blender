@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Solluns</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+    <!--LIBS-->
+    <script src="libs/TweenMax.min.js"></script>
+    <script src="libs/three.js"></script>
+    <script src="libs/SimplexNoise.js"></script>
+    <script src="libs/threex.terrain.js"></script>
+    <script src="libs/GLTFLoader.js"></script>
+    <script src="libs/OrbitControls.js"></script>
+
+<!--    <script src="libs/three.module.js"></script>-->
+
+    <script>
+        let scene = new THREE.Scene();
+        // scene.fog = new THREE.FogExp2( "#ffffff", 0.01 );
+        scene.fog = new THREE.Fog("#ffffff", 10, 100);
+
+        //camera
+        let camera = new THREE.PerspectiveCamera(
+            75,
+            window.innerWidth / window.innerHeight,
+           1,  10000
+        );
+        camera.position.z = 40;
+
+
+        //RENDERER
+        let renderer = new THREE.WebGLRenderer({antialias: true});
+        renderer.setClearColor("#FFFFFF");
+        // renderer.setClearAlpha();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        // renderer.setPixelRatio( window.devicePixelRatio );
+        document.body.appendChild( renderer.domElement );
+
+
+
+
+        let rayCaster = new THREE.Raycaster();
+        let mouse = new THREE.Vector2();
+        let INTERSECTED;
+
+
+        //sphere
+        let geometry = new THREE.SphereGeometry( 3, 15, 15 );
+        // let material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+        let material = new THREE.MeshLambertMaterial( {color: 0xffff00} );
+        let sphere = new THREE.Mesh( geometry, material );
+        sphere.position.x = -3;
+        sphere.name = "sphere";
+
+        // scene.add( sphere );
+
+
+        //box
+        geometry = new THREE.BoxGeometry( 10, 5, 2 );
+        // material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+        // let box = new THREE.Mesh( geometry, material );
+        // box.position.x = 15;
+        // box.rotation.set(45,2,3);
+        // box.name = "box";
+        // scene.add( box );
+
+        meshX = -10;
+        for (let i=0; i<10; i++){
+            material = new THREE.MeshLambertMaterial( {color: 0xffff00} );
+            let box = new THREE.Mesh( geometry, material );
+            box.position.x = (Math.random() - 0.5)  * 10 ;
+            box.position.y = (Math.random() - 0.5)  * 10 ;
+            box.position.z = (Math.random() - 0.5)  * 10 ;
+            box.rotation.set(45,2,3);
+            box.name = "box" + i;
+
+            // scene.add( box );
+            meshX +=1;
+
+        }
+
+        //light
+        let light = new THREE.PointLight(0xffffff);
+        light.position.set(10, 0, 25);
+        scene.add(light);
+
+        //TERRAIN
+
+        var heightMap	= THREEx.Terrain.allocateHeightMap(256,256);
+        THREEx.Terrain.simplexHeightMap(heightMap);
+        var geometryTerrain	= THREEx.Terrain.heightMapToPlaneGeometry(heightMap);
+        THREEx.Terrain.heightMapToVertexColor(heightMap, geometryTerrain);
+        /* Wireframe built-in color is white, no need to change that */
+        var materialTerrain	= new THREE.MeshBasicMaterial({
+            wireframe: true,
+            color: "#1E4081",
+            wireframeLinewidth: 1
+        });
+        var mesh	= new THREE.Mesh( geometryTerrain, materialTerrain );
+        scene.add( mesh );
+        mesh.lookAt(new THREE.Vector3(0,1,0));
+        /* Play around with the scaling */
+        mesh.scale.y	= 3.5;
+        mesh.scale.x	= 3;
+        mesh.scale.z	= 0.15;
+        mesh.scale.multiplyScalar(5);
+
+
+
+
+        let loader = new THREE.GLTFLoader();
+        // loader.load('assets/logo3d_solluns.glb', function (gltf) {
+        //     scene.add(gltf.scene);
+        //     // renderer.render(scene, camera)
+        // });
+
+        let escada ;
+        loader.load('assets/tripleLeg_solluns.glb', function (gltf) {
+
+            console.log("imported::::::");
+            console.log(gltf);
+
+            gltf.scene.scale.set(4,4,4);
+            gltf.scene.rotation.y = Math.PI + 5.2;
+
+            escada = gltf.scene;
+            scene.add(gltf.scene);
+        });
+
+
+        let smokeTexture = THREE.ImageUtils.loadTexture('assets/Smoke-Element.png');
+        let smokeMaterial = new THREE.MeshLambertMaterial({color: "#00dddd", map: smokeTexture, transparent: true});
+        let smokeGeo = new THREE.PlaneGeometry(100,100);
+        let smokeParticles = [];
+
+        for (p = 0; p < 1; p++) {
+            var particle = new THREE.Mesh(smokeGeo,smokeMaterial);
+            // particle.position.set(Math.random()*500-250,Math.random()*500-250,Math.random()*1000-100);
+            particle.rotation.z = Math.random() * 360;
+            particle.translateZ(-20);
+            scene.add(particle);
+            smokeParticles.push(particle);
+        }
+
+
+
+        /*
+            functions
+            functions
+            functions
+         */
+        //mouseMove raycast event
+        function evolveSmoke() {
+            var sp = smokeParticles.length;
+            while(sp--) {
+                smokeParticles[sp].rotation.z += (0.005);
+            }
+        }
+
+        function onMouseMove (event){
+            event.preventDefault();
+            mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+            mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+        }
+
+
+
+        function onMouseClick (event){
+            event.preventDefault();
+            // console.log( "onMouseMove!!" );
+
+            mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+            mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+            rayCaster.setFromCamera(mouse, camera);
+
+            let intersections = rayCaster.intersectObjects(scene.children, true);
+            for (let i=0; i<intersections.length; i++){
+                console.log( "intersection detected!!" );
+                console.log( intersections.length );
+
+                let tl = new TimelineMax();
+
+                tl.to( intersections[i].object.scale, .5, {x:-0.5 , ease: Expo.easeOut} );
+                tl.to( intersections[i].object.position, 5, {
+                    x: (Math.random()*25)  ,
+                    y: (Math.random()*25),
+                    z: (Math.random()*25),
+                    ease: Expo.easeOut
+                });
+                tl.to( intersections[i].object.scale, 5, {y: 3 , ease: Expo.easeOut}, "=-5" );
+                tl.to( intersections[i].object.rotation, 5, {y: Math.PI*6 , ease: Expo.easeOut}, "=-5" );
+                // if (intersections[i].object.name === 'box'){
+                // }else{
+                //     tl.to( intersections[i].object.scale, .5, {x:-0.5 , ease: Expo.easeOut} );
+                //     tl.to( intersections[i].object.position, 5, {x: 10, y:10, z: 20 , ease: Expo.easeOut} );
+                //     tl.to( intersections[i].object.scale, 5, {y: 3 , ease: Expo.easeOut}, "=-5" );
+                //     tl.to( intersections[i].object.rotation, 5, {y: Math.PI*6 , ease: Expo.easeOut}, "=-5" );
+                // }
+
+            }
+
+        }
+
+
+        //add click event on box
+        document.addEventListener('mousemove', onMouseMove, false);
+        document.addEventListener('click', onMouseClick, false);
+        //LISTEN TO SCREEN RESIZE
+        window.addEventListener('resize', ()=>{
+            // renderer.aspect =  window.innerWidth / window.innerHeight;
+            // camera.updateProjectionMatrix();
+
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            // renderer.setPixelRatio( window.devicePixelRatio );
+        }, false);
+
+
+        let controls = new THREE.OrbitControls( camera, renderer.domElement );
+        controls.update();
+
+        let theta = 0, radius = 100;
+        //render
+        // renderer.render( scene, camera );
+        let render = function(){
+
+            // theta += 0.1;
+            // camera.position.x = radius * Math.sin( THREE.Math.degToRad( theta ) );
+            // // camera.position.y = radius * Math.sin( THREE.Math.degToRad( theta ) );
+            // // camera.position.z = radius * Math.cos( THREE.Math.degToRad( theta ) );
+            // camera.lookAt( scene.position );
+            // camera.updateMatrixWorld();
+
+            sphere.rotation.set(
+                14,
+                sphere.rotation.y + 0.02,
+                sphere.rotation.z + 0.01
+            );
+
+            if (escada)
+                escada.rotation.y += 0.01;
+
+            // evolveSmoke();
+
+            //FIX 4 PIXEL RATIO RESIZE SCREEN ISSUE
+            const canvas = renderer.domElement;
+            camera.aspect = canvas.clientWidth / canvas.clientHeight;
+            camera.updateProjectionMatrix();
+
+            //ORBIT CONTROLS HELPER
+            controls.update();
+
+            // sphere.material.color.set(sphere.material.color.getHex() + 1);
+            // box.material.color.set(0xffff00);
+
+            //==================================================para raycaster!!
+
+            // rayCaster.setFromCamera( mouse, camera );
+            // var intersects = rayCaster.intersectObjects( scene.children );
+            // if ( intersects.length > 0 ) {
+            //     if ( INTERSECTED != intersects[0].object ) {
+            //
+            //         if ( INTERSECTED ){
+            //             // console.log(INTERSECTED);
+            //             INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+            //         }
+            //
+            //         INTERSECTED = intersects[ 0 ].object;
+            //         // INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+            //         INTERSECTED.material.emissive.setHex( 0xff0000 );
+            //     }
+            // } else {
+            //     if ( INTERSECTED )
+            //         INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+            //     INTERSECTED = null;
+            // }
+            //========================================================para raycaster!!
+
+            //render
+            renderer.render(scene, camera);
+            requestAnimationFrame(render);
+
+        };
+        render();
+
+
+
+
+
+    </script>
+</body>
+</html>
