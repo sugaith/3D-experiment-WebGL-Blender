@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Solluns</title>
+    <title>WebGL Experiment - Sugaith</title>
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
@@ -28,7 +28,7 @@
             window.innerWidth / window.innerHeight,
            1,  10000
         );
-        camera.position.z = 40;
+        camera.position.z = 80;
 
 
         //RENDERER
@@ -88,7 +88,6 @@
         scene.add(light);
 
         //TERRAIN
-
         var heightMap	= THREEx.Terrain.allocateHeightMap(256,256);
         THREEx.Terrain.simplexHeightMap(heightMap);
         var geometryTerrain	= THREEx.Terrain.heightMapToPlaneGeometry(heightMap);
@@ -103,10 +102,12 @@
         scene.add( mesh );
         mesh.lookAt(new THREE.Vector3(0,1,0));
         /* Play around with the scaling */
-        mesh.scale.y	= 3.5;
-        mesh.scale.x	= 3;
-        mesh.scale.z	= 0.15;
-        mesh.scale.multiplyScalar(5);
+        mesh.scale.y	= 30;
+        mesh.scale.x	= 30;
+        mesh.scale.z	= 2;
+        mesh.scale.multiplyScalar(10);
+        mesh.translateZ(-30);
+        mesh.name = 'TERRAIN';
 
 
 
@@ -119,7 +120,6 @@
 
         let escada ;
         loader.load('assets/tripleLeg_solluns.glb', function (gltf) {
-
             console.log("imported::::::");
             console.log(gltf);
 
@@ -128,6 +128,9 @@
 
             escada = gltf.scene;
             scene.add(gltf.scene);
+
+            escada.translateY(20)
+            escada.name = "ESCADA";
         });
 
 
@@ -141,8 +144,10 @@
             // particle.position.set(Math.random()*500-250,Math.random()*500-250,Math.random()*1000-100);
             particle.rotation.z = Math.random() * 360;
             particle.translateZ(-20);
+            particle.name = "SMOKE";
             scene.add(particle);
             smokeParticles.push(particle);
+
         }
 
 
@@ -181,17 +186,21 @@
             for (let i=0; i<intersections.length; i++){
                 console.log( "intersection detected!!" );
                 console.log( intersections.length );
+                console.log( intersections[i] );
+
+                if (intersections[i].object.name === 'TERRAIN' ||   intersections[i].object.name === 'SMOKE')
+                    return;
 
                 let tl = new TimelineMax();
 
-                tl.to( intersections[i].object.scale, .5, {x:-0.5 , ease: Expo.easeOut} );
+                // tl.to( intersections[i].object.scale, .5, {x:-0.5 , ease: Expo.easeOut} );
                 tl.to( intersections[i].object.position, 5, {
                     x: (Math.random()*25)  ,
                     y: (Math.random()*25),
                     z: (Math.random()*25),
                     ease: Expo.easeOut
                 });
-                tl.to( intersections[i].object.scale, 5, {y: 3 , ease: Expo.easeOut}, "=-5" );
+                // tl.to( intersections[i].object.scale, 5, {y: 3 , ease: Expo.easeOut}, "=-5" );
                 tl.to( intersections[i].object.rotation, 5, {y: Math.PI*6 , ease: Expo.easeOut}, "=-5" );
                 // if (intersections[i].object.name === 'box'){
                 // }else{
