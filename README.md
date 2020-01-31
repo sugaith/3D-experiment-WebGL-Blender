@@ -1,4 +1,6 @@
-#WEBGL THREE.JS EXPERIMENT with a Blender model
+#   WEBGL THREE.JS EXPERIMENT with a Blender model
+
+- the code: index.htm
 
 - See running: 
     - [https://sugaith.github.io/3D-experiment-WebGL-Blender/](https://sugaith.github.io/3D-experiment-WebGL-Blender/)
