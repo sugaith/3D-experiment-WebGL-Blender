@@ -13,7 +13,8 @@
     
 - Blender model: doubleLeg_solluns.blend
 
-![Print](screenshot.png?raw=true)
+[![Print](screenshot.png?raw=true)](https://sugaith.github.io/3D-experiment-WebGL-Blender/)
+
 
 
 
